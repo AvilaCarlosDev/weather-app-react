@@ -8,8 +8,8 @@ function App() {
   const [data, setData] = useState({});
   const [location, setLocation] = useState("");
 
-  // Definimos la URL de la API de OpenWeatherMap con la ubicación y la clave de API
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=abdbeb7485e4bdddb8298dc5be8fc69b`;
+  // Obtenemos la clave de API desde las variables de entorno
+  const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
 
   // Función para obtener la URL del ícono del clima
   const getWeatherIconUrl = (icon) => {
@@ -19,6 +19,9 @@ function App() {
   // Función para manejar la búsqueda de la ubicación cuando se presiona Enter
   const searchLocation = (event) => {
     if (event.key === "Enter") {
+      // Definimos la URL de la API de OpenWeatherMap con la ubicación y la clave de API
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`;
+
       // Realizamos la solicitud a la API de OpenWeatherMap
       axios.get(url).then((response) => {
         // Actualizamos los datos del clima con la respuesta de la API
