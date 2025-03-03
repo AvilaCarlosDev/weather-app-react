@@ -114,3 +114,58 @@ h1 {
 .bold {
   font-weight: 700;
 }
+
+/* Media queries para hacer el diseño responsivo */
+@media (max-width: 1200px) {
+  h1 {
+    font-size: 5rem;
+  }
+  .container {
+    height: 600px;
+  }
+}
+
+@media (max-width: 992px) {
+  h1 {
+    font-size: 4rem;
+  }
+  .container {
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+  .container {
+    height: 400px;
+  }
+  .app .description {
+    right: -80%;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  .container {
+    height: 300px;
+  }
+  .app .description {
+    right: -70%;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+  .container {
+    height: 250px;
+  }
+  .app .description {
+    right: -60%;
+  }
+}
