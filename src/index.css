@@ -550,3 +550,108 @@ h1 {
     gap: 0.6rem;
   }
 }
+
+/* Pronóstico de 7 días */
+.forecast-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.forecast-title {
+  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.8rem;
+}
+
+.forecast-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.forecast-card:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.forecast-day {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+}
+
+.forecast-icon {
+  width: 50px;
+  height: 50px;
+  margin: 0.3rem auto;
+  display: block;
+}
+
+.forecast-temp {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.temp-max {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.temp-min {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.forecast-desc {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  text-transform: capitalize;
+}
+
+@media (max-width: 480px) {
+  .forecast-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .forecast-card {
+    padding: 0.7rem 0.3rem;
+  }
+  
+  .forecast-day {
+    font-size: 0.75rem;
+  }
+  
+  .forecast-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .temp-max {
+    font-size: 0.95rem;
+  }
+  
+  .temp-min {
+    font-size: 0.8rem;
+  }
+}

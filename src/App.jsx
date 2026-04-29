@@ -7,6 +7,7 @@ import axios from "axios";
 function App() {
   // Estados para manejar datos del clima, ubicación, fondo y estados de la app
   const [weatherData, setWeatherData] = useState({});
+  const [forecastData, setForecastData] = useState([]); // Pronóstico de 7 días
   const [location, setLocation] = useState("");
   const [backgroundImage, setBackgroundImage] = useState(""); // Imagen dinámica
   const [defaultBackground] = useState("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"); // Fondo por defecto
@@ -50,6 +51,69 @@ function App() {
       console.log(`💾 Cache guardado para ${city}`);
     } catch (error) {
       console.error('Error guardando cache:', error);
+    }
+  };
+
+  // Función para obtener pronóstico de 7 días
+  const fetchForecast = async (lat, lon, cityName) => {
+    try {
+      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${weatherApiKey}&lang=es`;
+      const response = await axios.get(forecastUrl);
+      
+      // Agrupar datos por día (la API devuelve datos cada 3 horas)
+      const dailyForecast = [];
+      const processedDays = new Set();
+      
+      response.data.list.forEach(item => {
+        const date = new Date(item.dt * 1000);
+        const dayKey = date.toLocaleDateString('es-ES', { weekday: 'long' });
+        
+        if (!processedDays.has(dayKey) && dailyForecast.length < 7) {
+          // Tomar el dato del mediodía (12:00) para cada día
+          const hour = date.getHours();
+          if (hour >= 11 && hour <= 14) {
+            processedDays.add(dayKey);
+            dailyForecast.push({
+              day: dayKey,
+              temp: Math.round(item.main.temp),
+              tempMin: Math.round(item.main.temp_min),
+              tempMax: Math.round(item.main.temp_max),
+              description: item.weather[0].description,
+              icon: item.weather[0].icon,
+              humidity: item.main.humidity,
+              wind: item.wind.speed
+            });
+          }
+        }
+      });
+      
+      // Si no tenemos 7 días, completar con los primeros datos disponibles
+      if (dailyForecast.length < 7) {
+        response.data.list.forEach(item => {
+          const date = new Date(item.dt * 1000);
+          const dayKey = date.toLocaleDateString('es-ES', { weekday: 'long' });
+          
+          if (!processedDays.has(dayKey) && dailyForecast.length < 7) {
+            processedDays.add(dayKey);
+            dailyForecast.push({
+              day: dayKey,
+              temp: Math.round(item.main.temp),
+              tempMin: Math.round(item.main.temp_min),
+              tempMax: Math.round(item.main.temp_max),
+              description: item.weather[0].description,
+              icon: item.weather[0].icon,
+              humidity: item.main.humidity,
+              wind: item.wind.speed
+            });
+          }
+        });
+      }
+      
+      setForecastData(dailyForecast);
+      console.log(`📅 Pronóstico obtenido: ${dailyForecast.length} días`);
+    } catch (error) {
+      console.error('Error obteniendo pronóstico:', error);
+      setForecastData([]);
     }
   };
 
@@ -126,6 +190,9 @@ function App() {
         const country = cachedData.sys.country;
         await getBackgroundImage(cityName, country, weatherCondition);
         
+        // Obtener pronóstico de 7 días
+        await fetchForecast(cachedData.coord.lat, cachedData.coord.lon, cityName);
+        
         setLoading(false);
         return; // Salir temprano, usamos cache
       }
@@ -145,6 +212,9 @@ function App() {
       const weatherCondition = response.data.weather[0].main.toLowerCase();
       const country = response.data.sys.country;
       await getBackgroundImage(cityName, country, weatherCondition);
+      
+      // Obtener pronóstico de 7 días
+      await fetchForecast(response.data.coord.lat, response.data.coord.lon, cityName);
     } catch (error) {
       console.error("Error fetching weather data:", error);
       setError("No se pudo encontrar la ciudad. Intenta con otro nombre.");
@@ -372,6 +442,30 @@ function App() {
                 </div>
               </div>
             </div>
+
+            {/* Pronóstico de 7 días */}
+            {forecastData.length > 0 && (
+              <div className="forecast-section">
+                <h3 className="forecast-title">📅 Pronóstico de 7 Días</h3>
+                <div className="forecast-grid">
+                  {forecastData.map((day, index) => (
+                    <div key={index} className="forecast-card">
+                      <div className="forecast-day">{day.day}</div>
+                      <img
+                        src={getWeatherIconUrl(day.icon)}
+                        alt={day.description}
+                        className="forecast-icon"
+                      />
+                      <div className="forecast-temp">
+                        <span className="temp-max">{day.tempMax}°</span>
+                        <span className="temp-min">{day.tempMin}°</span>
+                      </div>
+                      <div className="forecast-desc">{day.description}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
