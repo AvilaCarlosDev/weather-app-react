@@ -1,0 +1,37 @@
+version: 2
+updates:
+  # Actualizaciones de npm/yarn/pnpm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Caracas"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "AvilaCarlosDev"
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore(deps)"
+    # Ignorar actualizaciones mayores que pueden romper compatibilidad
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # Actualizaciones de GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Caracas"
+    open-pull-requests-limit: 3
+    labels:
+      - "ci/cd"
+      - "dependencies"
+    commit-message:
+      prefix: "chore(ci)"
