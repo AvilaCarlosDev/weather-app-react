@@ -54,9 +54,9 @@ function App() {
   };
 
   // Obtenemos las claves de API desde las variables de entorno
-  // Para Vite usamos VITE_ en vez de REACT_APP_
-  const weatherApiKey = process.env.VITE_WEATHER_API_KEY || "demo";
-  const unsplashApiKey = process.env.VITE_UNSPLASH_API_KEY || "demo";
+  // Para Vite usamos import.meta.env en vez de process.env
+  const weatherApiKey = import.meta.env.VITE_WEATHER_API_KEY || "demo";
+  const unsplashApiKey = import.meta.env.VITE_UNSPLASH_API_KEY || "demo";
 
   // Función para obtener la URL del ícono del clima
   const getWeatherIconUrl = (icon) => {
